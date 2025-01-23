@@ -12,7 +12,7 @@ import { typeOrmModuleOptions } from './ormconfig';
     ConfigModule.forRoot({
       folder: './config',
     }),
-    TypeOrmModule.forRoot(typeOrmModuleOptions),
+    // TypeOrmModule.forRoot(typeOrmModuleOptions),
   ],
   controllers: [AppController],
   providers: [AppService],
