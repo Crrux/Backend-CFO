@@ -1,5 +1,6 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { DataSource, DataSourceOptions } from 'typeorm';
+import { Contact } from './contact/entities/contact.entity';
 
 const options: DataSourceOptions = {
   type: 'mariadb',
@@ -8,7 +9,7 @@ const options: DataSourceOptions = {
   username: 'root',
   password: 'root',
   database: 'CrossFitObernai',
-  entities: [],
+  entities: [Contact],
 };
 
 export const typeOrmModuleOptions: TypeOrmModuleOptions = {

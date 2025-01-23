@@ -14,10 +14,13 @@ export class Contact {
   name: string;
 
   @Column()
+  firstname: string;
+
+  @Column()
   email: string;
 
   @Column()
-  phone: string;
+  tel: string;
 
   @Column()
   message: string;

@@ -2,10 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { ContactInterface } from './contact';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from 'src/config/config.service';
+import { Contact } from './entities/contact.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ContactService {
   constructor(
+    @InjectRepository(Contact)
+    private contactRepository: Repository<Contact>,
     private readonly mailService: MailerService,
     private configService: ConfigService,
   ) {}
@@ -45,9 +50,10 @@ export class ContactService {
     }
   }
 
-  contactBddEntry(body: ContactInterface) {
+  async contactBddEntry(body: ContactInterface) {
     const { name, firstname, email, tel, message, reference } = body;
     const test = { name, firstname, email, tel, message, reference };
-    console.log(test);
+    const newEntry = await this.contactRepository.save(test);
+    return newEntry;
   }
 }
