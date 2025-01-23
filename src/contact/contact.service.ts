@@ -41,7 +41,6 @@ export class ContactService {
       });
       console.log(success);
       // console.log(success.messageId);
-      console.log('Email sent');
       return body;
     } catch (error) {
       throw new Error(
