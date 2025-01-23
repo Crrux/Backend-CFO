@@ -23,6 +23,8 @@ export class ContactController {
         message: 'Error sending email',
         error: error.message,
       });
+    } finally {
+      this.ContactService.contactBddEntry(body);
     }
   }
 }

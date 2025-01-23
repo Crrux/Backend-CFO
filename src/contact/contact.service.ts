@@ -44,4 +44,10 @@ export class ContactService {
       );
     }
   }
+
+  contactBddEntry(body: ContactInterface) {
+    const { name, firstname, email, tel, message, reference } = body;
+    const test = { name, firstname, email, tel, message, reference };
+    console.log(test);
+  }
 }

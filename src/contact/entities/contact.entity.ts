@@ -22,6 +22,9 @@ export class Contact {
   @Column()
   message: string;
 
+  @Column()
+  reference: string;
+
   @CreateDateColumn()
   created_at: Date;
 }
