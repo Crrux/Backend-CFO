@@ -15,17 +15,15 @@ export class ContactService {
     private configService: ConfigService,
   ) {}
 
-  async mailer(body: ContactInterface): Promise<ContactInterface> {
+  async mailer(body: ContactInterface): Promise<void> {
     const currentDate = new Date();
     const Reference = `${currentDate.toISOString().replace(/\D/g, '')}${body.firstname[0]}${body.name[0]}${body.tel.slice(-4)}`;
     body.reference = Reference.toUpperCase();
-
-    try {
-      const success = await this.mailService.sendMail({
-        from: `${this.configService.get('MAILER_USERNAME_NAME')} <${this.configService.get('MAILER_USERNAME')}>`,
-        to: `${this.configService.get('MAILER_SUBJECT')}`,
-        subject: `Formulaire CFO`,
-        html: `
+    await this.mailService.sendMail({
+      from: `${this.configService.get('MAILER_USERNAME_NAME')} <${this.configService.get('MAILER_USERNAME')}>`,
+      to: `${this.configService.get('MAILER_SUBJECT')}`,
+      subject: `Formulaire CFO`,
+      html: `
           <div>
             <h1 style="color:red;">Formulaire Site CrossfitObernai</h1>
             <p><span style="font-weight:bold; margin: 0; padding: 0;">Nom / Prenom:</span><p>
@@ -38,20 +36,13 @@ export class ContactService {
             <pre>${body.message}</pre>
             <p style="font-size:0.5rem"><span style="font-weight:bold;">Référence:</span> ${body.reference}</p>
           </div>`,
-      });
-      return body;
-    } catch (error) {
-      throw new Error(
-        `code: ( ${error.code} ) reponse: ( ${error.response} ) code reponse: ( ${error.responseCode} ) command: ( ${error.command} )`,
-      );
-    }
+    });
   }
 
-  async contactBddEntry(body: ContactInterface) {
+  async contactBddEntry(body: ContactInterface): Promise<void> {
     const { name, firstname, email, tel, message, reference } = body;
     const test = { name, firstname, email, tel, message, reference };
     const newEntry = await this.contactRepository.save(test);
     console.log(newEntry);
-    return newEntry;
   }
 }
