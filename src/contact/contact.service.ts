@@ -42,7 +42,6 @@ export class ContactService {
   async contactBddEntry(body: ContactInterface): Promise<void> {
     const { name, firstname, email, tel, message, reference } = body;
     const test = { name, firstname, email, tel, message, reference };
-    const newEntry = await this.contactRepository.save(test);
-    console.log(newEntry);
+    await this.contactRepository.save(test);
   }
 }
