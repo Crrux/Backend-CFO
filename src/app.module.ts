@@ -2,15 +2,18 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ContactModule } from './contact/contact.module';
-import { ConfigModule } from './config/config.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmModuleOptions } from './ormconfig';
+import { ConfigModule } from '@nestjs/config';
+import database from './environnement/database';
+import mailer from './environnement/mailer';
 
 @Module({
   imports: [
     ContactModule,
     ConfigModule.forRoot({
-      folder: './config',
+      isGlobal: true,
+      load: [database, mailer],
     }),
     TypeOrmModule.forRoot(typeOrmModuleOptions),
   ],

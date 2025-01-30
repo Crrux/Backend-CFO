@@ -1,29 +1,28 @@
 import { Module } from '@nestjs/common';
 import { ContactController } from './contact.controller';
 import { ContactService } from './contact.service';
-import { ConfigModule } from 'src/config/config.module';
-import { ConfigService } from '../config/config.service';
+import { ConfigModule, ConfigType } from '@nestjs/config';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Contact } from './entities/contact.entity';
+import mailer from '../environnement/mailer';
 
 @Module({
   imports: [
-    ConfigModule,
     MailerModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
+      inject: [mailer.KEY],
+      useFactory: (mailerConfig: ConfigType<typeof mailer>) => ({
         transport: {
-          host: configService.get('MAILER_HOSTNAME'),
+          host: mailerConfig.HOSTNAME,
           port: 465,
           secure: true,
           auth: {
-            user: configService.get('MAILER_USERNAME'),
-            pass: configService.get('MAILER_PASSWORD'),
+            user: mailerConfig.USERNAME,
+            pass: mailerConfig.PASSWORD,
           },
         },
       }),
-      inject: [ConfigService],
     }),
     TypeOrmModule.forFeature([Contact]),
   ],
