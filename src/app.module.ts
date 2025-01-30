@@ -11,11 +11,12 @@ import mailer from './environnement/mailer';
 @Module({
   imports: [
     ContactModule,
+    TypeOrmModule.forRoot(typeOrmModuleOptions),
     ConfigModule.forRoot({
       isGlobal: true,
       load: [database, mailer],
+      envFilePath: '.env',
     }),
-    TypeOrmModule.forRoot(typeOrmModuleOptions),
   ],
   controllers: [AppController],
   providers: [AppService],

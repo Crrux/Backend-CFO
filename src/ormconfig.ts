@@ -1,19 +1,16 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { Contact } from './contact/entities/contact.entity';
-import { ConfigService } from './config/config.service';
 
-const configService = new ConfigService({
-  folder: './config',
-});
+const { env } = process;
 
 const options: DataSourceOptions = {
   type: 'mariadb',
-  host: configService.get('DB_HOST'),
-  port: parseInt(configService.get('DB_PORT'), 10),
-  username: configService.get('DB_USERNAME'),
-  password: configService.get('DB_PASSWORD'),
-  database: configService.get('DB_DATABASE'),
+  host: env.DB_HOST,
+  port: parseInt(env.DB_PORT),
+  username: env.DB_USERNAME,
+  password: env.DB_PASSWORD,
+  database: env.DB_DATABASE,
   entities: [Contact],
 };
 
