@@ -13,10 +13,12 @@ export class ContactController {
     @Body() body: ContactInterface,
   ) {
     try {
-      const mail = await this.ContactService.mailer(body);
+      await Promise.all([
+        this.ContactService.mailer(body),
+        this.ContactService.contactBddEntry(body),
+      ]);
       return response.status(200).json({
         message: 'success',
-        mail,
       });
     } catch (error) {
       return response.status(500).json({
