@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import mailer from 'src/environnement/mailer';
 import { ConfigType } from '@nestjs/config';
+import { SendFormDto } from './interface/send-form.dto';
 
 @Injectable()
 export class ContactService {
@@ -18,7 +19,7 @@ export class ContactService {
     private mailerConfig: ConfigType<typeof mailer>,
   ) {}
 
-  async mailer(body: ContactInterface): Promise<void> {
+  async mailer(body: SendFormDto): Promise<void> {
     const currentDate = new Date();
     const Reference = `${currentDate.toISOString().replace(/\D/g, '')}${body.firstname[0]}${body.name[0]}${body.tel.slice(-4)}`;
     body.reference = Reference.toUpperCase();
@@ -42,7 +43,7 @@ export class ContactService {
     });
   }
 
-  async contactBddEntry(body: ContactInterface): Promise<void> {
+  async contactBddEntry(body: SendFormDto): Promise<void> {
     const { name, firstname, email, tel, message, reference } = body;
     const test = { name, firstname, email, tel, message, reference };
     await this.contactRepository.save(test);

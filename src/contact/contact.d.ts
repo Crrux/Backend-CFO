@@ -5,5 +5,4 @@ export type ContactInterface = {
   tel: string;
   message: string;
   checkbox: boolean;
-  reference: ?string;
 };
