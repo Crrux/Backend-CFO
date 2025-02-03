@@ -1,7 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ContactInterface } from './contact';
 import { MailerService } from '@nestjs-modules/mailer';
-import { ConfigService } from 'src/config/config.service';
 import { Contact } from './entities/contact.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';

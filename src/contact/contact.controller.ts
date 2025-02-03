@@ -1,6 +1,5 @@
 import { Body, Controller, Post, Req, Response } from '@nestjs/common';
 import { ContactService } from './contact.service';
-import { ContactInterface } from './contact';
 import { SendFormDto } from './interface/send-form.dto';
 
 @Controller('contact')
