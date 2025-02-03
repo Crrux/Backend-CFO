@@ -11,10 +11,10 @@ import {
 
 export class SendFormDto {
   @IsString()
-  @MinLength(3)
+  @MinLength(2)
   name: string;
   @IsString()
-  @MinLength(3)
+  @MinLength(2)
   firstname: string;
   @IsString()
   @IsEmail()
