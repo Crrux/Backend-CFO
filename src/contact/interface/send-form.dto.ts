@@ -32,5 +32,6 @@ export class SendFormDto {
   checkbox: boolean;
 
   @IsOptional()
+  @IsString()
   reference: string;
 }
