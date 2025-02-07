@@ -1,8 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
-import { Contact } from './entities/contact.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import mailer from 'src/environnement/mailer';
 import { ConfigType } from '@nestjs/config';
 import { SendFormDto } from './interface/send-form.dto';
@@ -10,8 +7,6 @@ import { SendFormDto } from './interface/send-form.dto';
 @Injectable()
 export class ContactService {
   constructor(
-    @InjectRepository(Contact)
-    private contactRepository: Repository<Contact>,
     private readonly mailService: MailerService,
     @Inject(mailer.KEY)
     private mailerConfig: ConfigType<typeof mailer>,
@@ -39,11 +34,5 @@ export class ContactService {
             <p style="font-size:0.5rem"><span style="font-weight:bold;">Référence:</span> ${body.reference}</p>
           </div>`,
     });
-  }
-
-  async contactBddEntry(body: SendFormDto): Promise<void> {
-    const { name, firstname, email, tel, message, reference } = body;
-    const test = { name, firstname, email, tel, message, reference };
-    await this.contactRepository.save(test);
   }
 }

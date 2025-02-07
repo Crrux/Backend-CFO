@@ -4,7 +4,6 @@ import {
   IsString,
   MinLength,
   Equals,
-  IsMobilePhone,
   Matches,
   IsOptional,
 } from 'class-validator';

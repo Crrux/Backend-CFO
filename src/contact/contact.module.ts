@@ -2,8 +2,6 @@ import { Module } from '@nestjs/common';
 import { ContactController } from './contact.controller';
 import { ContactService } from './contact.service';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Contact } from './entities/contact.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
@@ -27,7 +25,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         },
       }),
     }),
-    TypeOrmModule.forFeature([Contact]),
   ],
   controllers: [ContactController],
   providers: [ContactService],

@@ -9,10 +9,7 @@ export class ContactController {
   @Post()
   async mailContactForm(@Response() response, @Body() body: SendFormDto) {
     try {
-      await Promise.all([
-        this.ContactService.mailer(body),
-        this.ContactService.contactBddEntry(body),
-      ]);
+      await Promise.all([this.ContactService.mailer(body)]);
       return response.status(200).json({
         message: 'success',
       });
