@@ -1,17 +1,13 @@
 import { Body, Controller, Post, Req, Response } from '@nestjs/common';
 import { ContactService } from './contact.service';
-import { ContactInterface } from './contact';
+import { SendFormDto } from './interface/send-form.dto';
 
 @Controller('contact')
 export class ContactController {
   constructor(private readonly ContactService: ContactService) {}
 
   @Post()
-  async mailContactForm(
-    @Req() request: object,
-    @Response() response,
-    @Body() body: ContactInterface,
-  ) {
+  async mailContactForm(@Response() response, @Body() body: SendFormDto) {
     try {
       await Promise.all([
         this.ContactService.mailer(body),

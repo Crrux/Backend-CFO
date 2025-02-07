@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
-import { ContactInterface } from './contact';
+import { Inject, Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
-import { ConfigService } from 'src/config/config.service';
 import { Contact } from './entities/contact.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import mailer from 'src/environnement/mailer';
+import { ConfigType } from '@nestjs/config';
+import { SendFormDto } from './interface/send-form.dto';
 
 @Injectable()
 export class ContactService {
@@ -12,16 +13,17 @@ export class ContactService {
     @InjectRepository(Contact)
     private contactRepository: Repository<Contact>,
     private readonly mailService: MailerService,
-    private configService: ConfigService,
+    @Inject(mailer.KEY)
+    private mailerConfig: ConfigType<typeof mailer>,
   ) {}
 
-  async mailer(body: ContactInterface): Promise<void> {
+  async mailer(body: SendFormDto): Promise<void> {
     const currentDate = new Date();
     const Reference = `${currentDate.toISOString().replace(/\D/g, '')}${body.firstname[0]}${body.name[0]}${body.tel.slice(-4)}`;
     body.reference = Reference.toUpperCase();
     await this.mailService.sendMail({
-      from: `${this.configService.get('MAILER_USERNAME_NAME')} <${this.configService.get('MAILER_USERNAME')}>`,
-      to: `${this.configService.get('MAILER_SUBJECT')}`,
+      from: `${this.mailerConfig.USERNAME_NAME} <${this.mailerConfig.USERNAME}>`,
+      to: `${this.mailerConfig.SUBJECT}`,
       subject: `Formulaire CFO`,
       html: `
           <div>
@@ -39,7 +41,7 @@ export class ContactService {
     });
   }
 
-  async contactBddEntry(body: ContactInterface): Promise<void> {
+  async contactBddEntry(body: SendFormDto): Promise<void> {
     const { name, firstname, email, tel, message, reference } = body;
     const test = { name, firstname, email, tel, message, reference };
     await this.contactRepository.save(test);
