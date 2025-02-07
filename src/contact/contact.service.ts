@@ -22,7 +22,7 @@ export class ContactService {
       subject: `Formulaire CFO`,
       html: `
           <div>
-            <h1 style="color:red;">Formulaire Site CrossfitObernai</h1>
+            <h1 style="color:blue;">Formulaire Site CrossfitObernai</h1>
             <p><span style="font-weight:bold; margin: 0; padding: 0;">Nom / Prenom:</span><p>
             <pre>${body.name.charAt(0).toUpperCase() + body.name.slice(1).toLowerCase()} ${body.firstname.charAt(0).toUpperCase() + body.firstname.slice(1).toLowerCase()}</pre>
             <p><span style="font-weight:bold; margin: 0; padding: 0;">Email:</span> </p>
@@ -31,6 +31,7 @@ export class ContactService {
             <pre>${body.tel}</pre>
             <p><span style="font-weight:bold; margin: 0; padding: 0;">Message:</span> </p>
             <pre>${body.message}</pre>
+            <p>Mentions légales: ${body.checkbox ? 'Acceptées' : 'Refusées'}</p>
             <p style="font-size:0.5rem"><span style="font-weight:bold;">Référence:</span> ${body.reference}</p>
           </div>`,
     });
