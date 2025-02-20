@@ -10,7 +10,6 @@ Ce backend est conçu pour gérer l'envoi des emails et le stockage des données
 
 - Gestion de l'envoi d'emails
 - Stockage des données des emails en base de données
-- API RESTful pour interagir avec le service
 
 ## Technologies
 
