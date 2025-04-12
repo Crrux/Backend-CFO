@@ -42,6 +42,7 @@ export class ContactService {
       });
       return 'Email sent';
     } catch (error) {
+      console.log(error);
       throw new Error('Error sending email');
     }
   }
