@@ -36,7 +36,9 @@ export class ContactService {
               <p style="font-size:0.5rem"><span style="font-weight:bold;">Référence:</span> ${body.reference}</p>
             </div>`,
       });
+      console.log('ok');
     } catch (error) {
+      console.log(error);
       throw new Error(error);
     }
   }
