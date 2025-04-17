@@ -26,7 +26,6 @@ import { Contact } from './contact/entities/contact.entity';
           database: configService.get('database.DATABASE') as string,
           entities: [Contact],
           synchronize: synchronize === undefined ? true : synchronize,
-          // Legacy MySQL/MariaDB options kept for reference in case you switch back
           host: configService.get('database.HOST'),
           port: configService.get('database.PORT'),
           username: configService.get('database.USERNAME'),

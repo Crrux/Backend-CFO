@@ -6,7 +6,6 @@ export default registerAs('database', () => ({
   DATABASE:
     process.env.DB_DATABASE || path.resolve(__dirname, '../../database.sqlite'),
   SYNCHRONIZE: process.env.DB_SYNCHRONIZE === 'true',
-  // Legacy MySQL/MariaDB config, kept for reference
   HOST: process.env.DB_HOST,
   PORT: parseInt(process.env.DB_PORT, 10) || 3306,
   USERNAME: process.env.DB_USERNAME,
