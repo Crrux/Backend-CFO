@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { ContactModule } from './contact/contact.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { typeOrmModuleOptions } from './ormconfig';
 import database from './environnement/database';
 import mailer from './environnement/mailer';
 
@@ -16,11 +15,11 @@ import mailer from './environnement/mailer';
       load: [database, mailer],
       envFilePath: '.env',
     }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) =>
-        typeOrmModuleOptions(configService),
+    TypeOrmModule.forRoot({
+      type: 'sqlite',
+      database: 'database.sqlite',
+      entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+      synchronize: true,
     }),
   ],
   controllers: [AppController],
