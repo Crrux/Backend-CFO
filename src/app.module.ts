@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import database from './environnement/database';
 import mailer from './environnement/mailer';
+import { Contact } from './contact/entities/contact.entity';
 
 @Module({
   imports: [
@@ -15,11 +16,23 @@ import mailer from './environnement/mailer';
       load: [database, mailer],
       envFilePath: '.env',
     }),
-    TypeOrmModule.forRoot({
-      type: 'sqlite',
-      database: 'database.sqlite',
-      entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-      synchronize: true,
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        const synchronize = configService.get('database.SYNCHRONIZE');
+        return {
+          type: configService.get('database.TYPE') as any,
+          database: configService.get('database.DATABASE') as string,
+          entities: [Contact],
+          synchronize: synchronize === undefined ? true : synchronize,
+          // Legacy MySQL/MariaDB options kept for reference in case you switch back
+          host: configService.get('database.HOST'),
+          port: configService.get('database.PORT'),
+          username: configService.get('database.USERNAME'),
+          password: configService.get('database.PASSWORD') as string,
+        };
+      },
     }),
   ],
   controllers: [AppController],
