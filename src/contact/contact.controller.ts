@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req, Response } from '@nestjs/common';
+import { Body, Controller, Get, Post, Response } from '@nestjs/common';
 import { ContactService } from './contact.service';
 import { SendFormDto } from './interface/send-form.dto';
 
@@ -19,6 +19,19 @@ export class ContactController {
     } catch (error) {
       return response.status(500).json({
         message: 'Error sending email',
+        error: error.message,
+      });
+    }
+  }
+
+  @Get()
+  async getAllContacts(@Response() response) {
+    try {
+      const contacts = await this.ContactService.getAllContacts();
+      return response.status(200).json(contacts);
+    } catch (error) {
+      return response.status(500).json({
+        message: 'Error retrieving contacts',
         error: error.message,
       });
     }

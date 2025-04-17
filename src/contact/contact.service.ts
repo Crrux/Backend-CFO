@@ -1,21 +1,27 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 import { Contact } from './entities/contact.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import mailer from 'src/environnement/mailer';
-import { ConfigType } from '@nestjs/config';
+import { ConfigService, ConfigType } from '@nestjs/config';
 import { SendFormDto } from './interface/send-form.dto';
+import { EncryptionUtil } from '../utils/encryption.util';
 
 @Injectable()
-export class ContactService {
+export class ContactService implements OnModuleInit {
   constructor(
     @InjectRepository(Contact)
     private contactRepository: Repository<Contact>,
     private readonly mailService: MailerService,
+    private readonly configService: ConfigService,
     @Inject(mailer.KEY)
     private mailerConfig: ConfigType<typeof mailer>,
   ) {}
+
+  onModuleInit() {
+    EncryptionUtil.init(this.configService);
+  }
 
   async mailer(body: SendFormDto): Promise<string> {
     try {
@@ -49,7 +55,54 @@ export class ContactService {
 
   async contactBddEntry(body: SendFormDto): Promise<void> {
     const { name, firstname, email, tel, message, reference } = body;
-    const test = { name, firstname, email, tel, message, reference };
-    await this.contactRepository.save(test);
+
+    // Encrypt sensitive data before saving to database
+    const encrypted = {
+      name: EncryptionUtil.encrypt(name),
+      firstname: EncryptionUtil.encrypt(firstname),
+      email: EncryptionUtil.encrypt(email),
+      tel: EncryptionUtil.encrypt(tel),
+      message: EncryptionUtil.encrypt(message),
+      reference,
+    };
+
+    await this.contactRepository.save(encrypted);
+  }
+
+  // Add a method to get and decrypt contact data
+  async getContactById(id: number): Promise<any> {
+    const contact = await this.contactRepository.findOne({ where: { id } });
+
+    if (!contact) {
+      return null;
+    }
+
+    // Decrypt the data for response
+    return {
+      id: contact.id,
+      name: EncryptionUtil.decrypt(contact.name),
+      firstname: EncryptionUtil.decrypt(contact.firstname),
+      email: EncryptionUtil.decrypt(contact.email),
+      tel: EncryptionUtil.decrypt(contact.tel),
+      message: EncryptionUtil.decrypt(contact.message),
+      reference: contact.reference,
+      created_at: contact.created_at,
+    };
+  }
+
+  // Method to get all contacts with decryption
+  async getAllContacts(): Promise<any[]> {
+    const contacts = await this.contactRepository.find();
+
+    return contacts.map((contact) => ({
+      id: contact.id,
+      name: EncryptionUtil.decrypt(contact.name),
+      firstname: EncryptionUtil.decrypt(contact.firstname),
+      email: EncryptionUtil.decrypt(contact.email),
+      tel: EncryptionUtil.decrypt(contact.tel),
+      message: EncryptionUtil.decrypt(contact.message),
+      reference: contact.reference,
+      created_at: contact.created_at,
+    }));
   }
 }
