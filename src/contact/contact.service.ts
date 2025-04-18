@@ -69,26 +69,6 @@ export class ContactService implements OnModuleInit {
     }
   }
 
-  // Add a method to get and decrypt contact data
-  async getContactById(id: number): Promise<any> {
-    const contact = await this.contactRepository.findOne({ where: { id } });
-
-    if (!contact) {
-      return null;
-    }
-
-    // Decrypt the data for response
-    return {
-      id: contact.id,
-      name: EncryptionUtil.decrypt(contact.name),
-      firstname: EncryptionUtil.decrypt(contact.firstname),
-      email: EncryptionUtil.decrypt(contact.email),
-      tel: EncryptionUtil.decrypt(contact.tel),
-      message: EncryptionUtil.decrypt(contact.message),
-      created_at: contact.created_at,
-    };
-  }
-
   // Method to get all contacts with decryption
   async getAllContacts(): Promise<any[]> {
     const contacts = await this.contactRepository.find();
