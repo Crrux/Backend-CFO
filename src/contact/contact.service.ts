@@ -25,9 +25,6 @@ export class ContactService implements OnModuleInit {
 
   async mailer(body: SendFormDto): Promise<string> {
     try {
-      const currentDate = new Date();
-      const Reference = `${currentDate.toISOString().replace(/\D/g, '')}${body.firstname[0]}${body.name[0]}${body.tel.slice(-4)}`;
-      body.reference = Reference.toUpperCase();
       await this.mailService.sendMail({
         from: `${this.mailerConfig.USERNAME_NAME} <${this.mailerConfig.USERNAME}>`,
         to: `${this.mailerConfig.SUBJECT}`,
@@ -43,7 +40,6 @@ export class ContactService implements OnModuleInit {
               <pre>${body.tel}</pre>
               <p><span style="font-weight:bold; margin: 0; padding: 0;">Message:</span> </p>
               <pre>${body.message}</pre>
-              <p style="font-size:0.5rem"><span style="font-weight:bold;">Référence:</span> ${body.reference}</p>
             </div>`,
       });
       return 'Email sent';
@@ -63,7 +59,6 @@ export class ContactService implements OnModuleInit {
       email: EncryptionUtil.encrypt(email),
       tel: EncryptionUtil.encrypt(tel),
       message: EncryptionUtil.encrypt(message),
-      reference,
     };
 
     await this.contactRepository.save(encrypted);
@@ -85,7 +80,6 @@ export class ContactService implements OnModuleInit {
       email: EncryptionUtil.decrypt(contact.email),
       tel: EncryptionUtil.decrypt(contact.tel),
       message: EncryptionUtil.decrypt(contact.message),
-      reference: contact.reference,
       created_at: contact.created_at,
     };
   }
@@ -101,7 +95,6 @@ export class ContactService implements OnModuleInit {
       email: EncryptionUtil.decrypt(contact.email),
       tel: EncryptionUtil.decrypt(contact.tel),
       message: EncryptionUtil.decrypt(contact.message),
-      reference: contact.reference,
       created_at: contact.created_at,
     }));
   }
