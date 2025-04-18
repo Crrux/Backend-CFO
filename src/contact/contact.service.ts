@@ -80,7 +80,20 @@ export class ContactService implements OnModuleInit {
       email: EncryptionUtil.decrypt(contact.email),
       tel: EncryptionUtil.decrypt(contact.tel),
       message: EncryptionUtil.decrypt(contact.message),
-      created_at: contact.created_at,
+      created_at: this.convertUTCToLocalTime(contact.created_at),
     }));
+  }
+
+  private convertUTCToLocalTime(utcDate: Date): string {
+    if (!utcDate) return '';
+    const localDate = new Date(utcDate);
+    return localDate.toLocaleString('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    });
   }
 }
