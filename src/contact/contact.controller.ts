@@ -18,7 +18,7 @@ export class ContactController {
       });
     } catch (error) {
       return response.status(500).json({
-        message: 'Error sending email',
+        message: 'Error:',
         error: error.message,
       });
     }

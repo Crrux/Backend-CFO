@@ -18,7 +18,14 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "pm2:dev": "pm2 start ecosystem.config.js",
+    "pm2:prod": "pm2 start ecosystem.config.js --env production",
+    "pm2:staging": "pm2 start ecosystem.config.js --env staging",
+    "pm2:stop": "pm2 stop ecosystem.config.js",
+    "pm2:delete": "pm2 delete ecosystem.config.js",
+    "pm2:restart": "pm2 restart ecosystem.config.js",
+    "pm2:logs": "pm2 logs"
   },
   "dependencies": {
     "@nestjs-modules/mailer": "^2.0.2",

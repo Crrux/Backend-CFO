@@ -44,24 +44,29 @@ export class ContactService implements OnModuleInit {
       });
       return 'Email sent';
     } catch (error) {
-      console.error(error);
-      throw new Error('Error sending email');
+      console.error('Mail service error:', error);
+      throw new Error(`Error sending email: ${error.message}`);
     }
   }
 
   async contactBddEntry(body: SendFormDto): Promise<void> {
-    const { name, firstname, email, tel, message, reference } = body;
+    try {
+      const { name, firstname, email, tel, message, reference } = body;
 
-    // Encrypt sensitive data before saving to database
-    const encrypted = {
-      name: EncryptionUtil.encrypt(name),
-      firstname: EncryptionUtil.encrypt(firstname),
-      email: EncryptionUtil.encrypt(email),
-      tel: EncryptionUtil.encrypt(tel),
-      message: EncryptionUtil.encrypt(message),
-    };
+      // Encrypt sensitive data before saving to database
+      const encrypted = {
+        name: EncryptionUtil.encrypt(name),
+        firstname: EncryptionUtil.encrypt(firstname),
+        email: EncryptionUtil.encrypt(email),
+        tel: EncryptionUtil.encrypt(tel),
+        message: EncryptionUtil.encrypt(message),
+      };
 
-    await this.contactRepository.save(encrypted);
+      await this.contactRepository.save(encrypted);
+    } catch (error) {
+      console.error('Database entry error:', error);
+      throw new Error(`Error saving to database: ${error.message}`);
+    }
   }
 
   // Add a method to get and decrypt contact data
