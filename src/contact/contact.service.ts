@@ -51,7 +51,7 @@ export class ContactService implements OnModuleInit {
 
   async contactBddEntry(body: SendFormDto): Promise<void> {
     try {
-      const { name, firstname, email, tel, message, reference } = body;
+      const { name, firstname, email, tel, message } = body;
 
       // Encrypt sensitive data before saving to database
       const encrypted = {
