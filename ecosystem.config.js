@@ -4,6 +4,7 @@ module.exports = {
             name: 'crossfit-obernai-api',
             script: 'dist/main.js',
             instances: 1,
+            instance_var: "BACKEND_INSTANCE",
             autorestart: true,
             watch: false,
             max_memory_restart: '1G',
