@@ -14,15 +14,22 @@ import { Contact } from './contact/entities/contact.entity';
     ConfigModule.forRoot({
       isGlobal: true,
       load: [database, mailer],
-      envFilePath: '.env',
+      envFilePath: [`.env.${process.env.NODE_ENV || 'development'}`, '.env'],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
+        const dbType = configService.get('database.TYPE');
         const synchronize = configService.get('database.SYNCHRONIZE');
+
+        console.log(
+          `Current environment: ${process.env.NODE_ENV || 'development'}`,
+        );
+        console.log(`Database type: ${dbType}`);
+
         return {
-          type: configService.get('database.TYPE') as any,
+          type: dbType as any,
           database: configService.get('database.DATABASE') as string,
           entities: [Contact],
           synchronize: synchronize === undefined ? true : synchronize,
@@ -30,6 +37,7 @@ import { Contact } from './contact/entities/contact.entity';
           port: configService.get('database.PORT'),
           username: configService.get('database.USERNAME'),
           password: configService.get('database.PASSWORD') as string,
+          logging: process.env.NODE_ENV !== 'production',
         };
       },
     }),
