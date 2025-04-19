@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  app:
+    image: backend-cfo:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_ENV=production
+      # Variables non sensibles
+      - MAILER_USERNAME_NAME=Formulaire
+      - MAILER_HOSTNAME=ssl0.ovh.net
+      - DB_TYPE=sqlite
+      - DB_DATABASE=/data/database.prod.sqlite
+      - DB_SYNCHRONIZE=true
+    secrets:
+      - mailer_password
+      - encryption_key
+      - mailer_username
+      - mailer_subject
+    volumes:
+      - db_data:/data
+
+# Définition du volume pour les données persistantes
+volumes:
+  db_data:
+    driver: local
+
+secrets:
+  mailer_password:
+    external: true
+  encryption_key:
+    external: true
+  mailer_username:
+    external: true
+  mailer_subject:
+    external: true

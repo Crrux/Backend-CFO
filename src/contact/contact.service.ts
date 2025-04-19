@@ -7,9 +7,12 @@ import mailer from 'src/environnement/mailer';
 import { ConfigService, ConfigType } from '@nestjs/config';
 import { SendFormDto } from './interface/send-form.dto';
 import { EncryptionUtil } from '../utils/encryption.util';
+import * as fs from 'fs';
 
 @Injectable()
 export class ContactService implements OnModuleInit {
+  private mailerSubject: string;
+
   constructor(
     @InjectRepository(Contact)
     private contactRepository: Repository<Contact>,
@@ -17,7 +20,20 @@ export class ContactService implements OnModuleInit {
     private readonly configService: ConfigService,
     @Inject(mailer.KEY)
     private mailerConfig: ConfigType<typeof mailer>,
-  ) {}
+  ) {
+    this.mailerSubject = this.mailerConfig.SUBJECT;
+    try {
+      if (fs.existsSync('/run/secrets/mailer_subject')) {
+        this.mailerSubject = fs
+          .readFileSync('/run/secrets/mailer_subject', 'utf8')
+          .trim();
+      }
+    } catch (error) {
+      console.log(
+        'No Docker secret found for mailer subject, using environment variable',
+      );
+    }
+  }
 
   onModuleInit() {
     EncryptionUtil.init(this.configService);
@@ -25,9 +41,20 @@ export class ContactService implements OnModuleInit {
 
   async mailer(body: SendFormDto): Promise<string> {
     try {
+      let username = this.mailerConfig.USERNAME;
+      try {
+        if (fs.existsSync('/run/secrets/mailer_username')) {
+          username = fs
+            .readFileSync('/run/secrets/mailer_username', 'utf8')
+            .trim();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+
       await this.mailService.sendMail({
-        from: `${this.mailerConfig.USERNAME_NAME} <${this.mailerConfig.USERNAME}>`,
-        to: `${this.mailerConfig.SUBJECT}`,
+        from: `${this.mailerConfig.USERNAME_NAME} <${username}>`,
+        to: `${this.mailerSubject}`,
         subject: `Formulaire CFO`,
         html: `
             <div>
