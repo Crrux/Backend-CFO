@@ -1,19 +1,5 @@
 import * as CryptoJS from 'crypto-js';
 import { ConfigService } from '@nestjs/config';
-// Import Node.js crypto module for randomUUID functionality
-import * as nodeCrypto from 'crypto';
-
-// Add only the randomUUID method if it's missing
-if (!global.crypto) {
-  global.crypto = global.crypto;
-}
-
-// Add the randomUUID method that NestJS TypeORM is trying to use
-if (!global.crypto.randomUUID) {
-  global.crypto.randomUUID = function randomUUID() {
-    return nodeCrypto.randomUUID();
-  };
-}
 
 export class EncryptionUtil {
   private static configService: ConfigService;
