@@ -25,7 +25,12 @@
     "pm2:stop": "pm2 stop ecosystem.config.js",
     "pm2:delete": "pm2 delete ecosystem.config.js",
     "pm2:restart": "pm2 restart ecosystem.config.js",
-    "pm2:logs": "pm2 logs"
+    "pm2:logs": "pm2 logs",
+    "docker:build": "docker build -t backend-cfo .",
+    "docker:run": "docker run -p 3000:3000 --name backend-cfo-container backend-cfo",
+    "docker:compose": "docker-compose up -d",
+    "docker:compose:build": "docker-compose up -d --build",
+    "docker:stop": "docker-compose down"
   },
   "dependencies": {
     "@nestjs-modules/mailer": "^2.0.2",
